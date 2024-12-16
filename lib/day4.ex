@@ -3,6 +3,7 @@ defmodule Day4 do
 
   @word_size 4
   @valid_words ["XMAS", "SAMX"]
+  @star2_words ["MAS", "SAM"]
 
   def find_all_xmas(input) do
     lines = handle_input(input)
@@ -96,6 +97,27 @@ defmodule Day4 do
     |> Enum.count(fn word -> word in @valid_words end)
   end
 
+  def find_all_mas_xs(input) do
+    handle_input(input)
+    |> Enum.map(fn line -> Enum.chunk_every(line, 3, 1, :discard) end)
+    |> transpose()
+    |> Enum.flat_map(fn line -> Enum.chunk_every(line, 3, 1, :discard) end)
+    |> Enum.map(&is_this_square_an_x_mas?/1)
+    |> Enum.count(fn item -> item == true end)
+  end
+
+  def is_this_square_an_x_mas?(square) do
+    all_letters = List.flatten(square)
+
+    top_left_diagonal_word =
+      "#{Enum.at(all_letters, 0)}#{Enum.at(all_letters, 4)}#{Enum.at(all_letters, 8)}"
+
+    bottom_left_diagonal_word =
+      "#{Enum.at(all_letters, 6)}#{Enum.at(all_letters, 4)}#{Enum.at(all_letters, 2)}"
+
+    bottom_left_diagonal_word in @star2_words and top_left_diagonal_word in @star2_words
+  end
+
   defp handle_input(input) do
     String.split(input, "\n", trim: true)
     |> Enum.map(fn line -> String.split(line, "", trim: true) end)
@@ -108,5 +130,6 @@ defmodule Day4 do
 
   def second_star do
     Helpers.FileReader.read_file(@filename)
+    |> find_all_mas_xs
   end
 end
