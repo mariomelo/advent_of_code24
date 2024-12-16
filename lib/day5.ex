@@ -29,7 +29,7 @@ defmodule Day5 do
     end)
   end
 
-  defp fix_manual_page(manual, page, []), do: manual
+  defp fix_manual_page(manual, _page, []), do: manual
 
   defp fix_manual_page(manual, page, [rule_to_fix | rules_left]) do
     fixed_rule = [rule_to_fix, page]
