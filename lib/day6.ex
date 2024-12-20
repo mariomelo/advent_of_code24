@@ -1,4 +1,6 @@
 defmodule Day6 do
+  alias Helpers.Matrix
+
   @filename "day6.txt"
 
   @guard_positions ["^", ">", "<", "v"]
@@ -94,17 +96,7 @@ defmodule Day6 do
   end
 
   defp create_room_map(input) do
-    room_list =
-      input
-      |> String.split("\n", trim: true)
-      |> Enum.map(fn line -> String.split(line, "", trim: true) end)
-
-    for room_line <- Range.new(0, length(room_list) - 1),
-        room_column <- Range.new(0, length(Enum.at(room_list, room_line)) - 1) do
-      content = room_list |> Enum.at(room_line) |> Enum.at(room_column)
-      {{room_line, room_column}, content}
-    end
-    |> Map.new()
+    Matrix.create_from_input(input)
   end
 
   def first_star do
